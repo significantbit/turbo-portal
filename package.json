@@ -1,0 +1,7 @@
+{
+  "name": "@sigbit/turbo-portal",
+  "author": "Jacob Andersson",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "index.mjs"
+}
