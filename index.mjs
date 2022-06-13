@@ -16,15 +16,21 @@
   if (turboFrame.dataset.rendered !== 'true')
     return
 
-  // Skip normal turbo behavior since we do not want to replace anything
-  event.preventDefault()
+  const unloadEvent = new Event('turbo-portal:unload', { bubbles: true, cancelable: true })
+  turboFrame.removeEventListener('turbo:frame-render', onPortalFrameRender)
 
-  // Reset state
-  turboFrame.removeAttribute('src')
-  turboFrame.dataset.rendered = 'false'
-  turboFrame.innerHTML = ''
+  if (portal.dispatchEvent(unloadEvent)) {
+    // Skip normal turbo behavior since we do not want to replace anything
+    event.preventDefault()
 
-  portal.dispatchEvent(new Event('turbo-portal:unload', { bubbles: true }))
+    // Reset state
+    turboFrame.removeAttribute('src')
+    turboFrame.dataset.rendered = 'false'
+    turboFrame.innerHTML = ''
+
+    // Cleanup listeners
+    turboFrame.removeEventListener('turbo:before-fetch-response', beforePortalFetchResponse)
+  }
 }
 
 /**
