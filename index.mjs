@@ -42,6 +42,10 @@ const onPortalFrameRender = (event) => {
   const turboFrame = form.closest('[data-portal]')
   const portal = turboFrame.parentElement
   turboFrame.dataset.rendered = 'true'
+
+  // Isolate form target to not leak outside portal
+  turboFrame.querySelectorAll('form[data-turbo-frame="_top"]')
+    .forEach(el => el.dataset.turboFrame = turboFrame.id)
   
   // Do not re-trigger load event on form errors etc inside the portal
   if (event.detail.fetchResponse.succeeded)
